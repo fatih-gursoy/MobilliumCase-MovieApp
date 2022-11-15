@@ -30,14 +30,16 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(scrollView)
-        setConstraints()
-        
-        configureNavBar()
+        setConstraints()        
         prepareRefreshControl()
 
         viewModel.view = self
         viewModel.fetchNowPlaying()
         viewModel.fetchUpcoming()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        configureNavBar()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -46,7 +48,6 @@ class MainViewController: UIViewController {
     
     func configureNavBar() {
         self.navigationController?.isNavigationBarHidden = true
-        
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
     }
     
@@ -132,7 +133,7 @@ class MainViewController: UIViewController {
         }
         
         contentView.snp.makeConstraints { make in
-            make.top.bottom.leading.trailing.equalToSuperview()
+            make.edges.equalToSuperview()
             make.width.equalToSuperview()
         }
         

@@ -44,6 +44,8 @@ class NowPlayingCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "SF Pro Display", size: 20)
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.textColor = .white
         return label
     }()
