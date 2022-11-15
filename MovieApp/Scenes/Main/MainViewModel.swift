@@ -9,6 +9,7 @@ import Foundation
 
 protocol MainViewModelProtocol: AnyObject {
     var view: MainViewProtocol? {get set}
+    var router: MainViewRouterProtocol? {get set}
     var nowPlayingList: [Movie] {get set}
     var upcomingList: [Movie] {get set}
     var isPageLoading: Bool {get set}
@@ -16,11 +17,15 @@ protocol MainViewModelProtocol: AnyObject {
     
     func fetchNowPlaying() 
     func fetchUpcoming()
+    func routeToDetail(movieId: Int)
 }
 
 class MainViewModel: MainViewModelProtocol {
     
     private let service: NetworkManagerProtocol
+    
+    weak var view: MainViewProtocol?
+    var router: MainViewRouterProtocol?
     
     var nowPlayingList: [Movie] = []
     var upcomingList: [Movie] = []
@@ -28,22 +33,24 @@ class MainViewModel: MainViewModelProtocol {
     var isPageLoading: Bool = false
     var isLastPage: Bool = false
     
-    weak var view: MainViewProtocol?
-    
     init(service: NetworkManagerProtocol = NetworkManager.shared) {
         self.service = service
     }
+    
+// MARK: - Functions
     
     func fetchNowPlaying() {
         
         let request = APIRequest.nowPlaying(page: 1)
         
         service.fetch(endPoint: request) { [weak self] (result: Result<ResponseModel, Error>) in
+            guard let self = self else {return}
+
             switch result {
             case .success(let value):
                 guard let data = value.results else {return}
-                self?.nowPlayingList = data
-                DispatchQueue.main.async { self?.view?.configureUI() }
+                self.nowPlayingList = data
+                DispatchQueue.main.async { self.view?.configureUI() }
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -79,4 +86,7 @@ class MainViewModel: MainViewModelProtocol {
         }
     }
     
+    func routeToDetail(movieId: Int) {
+        router?.routeToDetail(movieId: movieId)
+    }
 }

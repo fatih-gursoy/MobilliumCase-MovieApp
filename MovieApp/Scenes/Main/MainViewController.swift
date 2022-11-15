@@ -15,6 +15,7 @@ protocol MainViewProtocol: AnyObject {
 class MainViewController: UIViewController {
 
     var viewModel: MainViewModelProtocol
+    var activityView = ActivityView()
     
     init(viewModel: MainViewModelProtocol) {
         self.viewModel = viewModel
@@ -31,17 +32,29 @@ class MainViewController: UIViewController {
         view.addSubview(scrollView)
         setConstraints()
         
+        configureNavBar()
+        prepareRefreshControl()
+
         viewModel.view = self
         viewModel.fetchNowPlaying()
         viewModel.fetchUpcoming()
-        refreshControl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.bounds = CGRect(x: 0, y: -50, width: refreshControl.frame.width, height: refreshControl.frame.height)
-        scrollView.refreshControl = refreshControl
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    func configureNavBar() {
+        self.navigationController?.isNavigationBarHidden = true
+        
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+    }
+    
+    func prepareRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.bounds = CGRect(x: 0, y: -50, width: refreshControl.frame.width, height: refreshControl.frame.height)
+        scrollView.refreshControl = refreshControl
     }
     
     @objc func pullRefresh() {
@@ -66,6 +79,7 @@ class MainViewController: UIViewController {
     
     private lazy var contentView: UIView = {
         let contentView = UIView()
+        contentView.addSubview(activityView)
         contentView.addSubview(collectionView)
         contentView.addSubview(pageControl)
         contentView.addSubview(tableView)
@@ -144,10 +158,13 @@ class MainViewController: UIViewController {
 extension MainViewController: MainViewProtocol {
     
     func configureUI() {
-        self.navigationController?.isNavigationBarHidden = true
         collectionView.reloadData()
         tableView.reloadData()
         pageControl.numberOfPages = 5
+        
+        UIView.transition(with: self.view, duration: 3, options: [.transitionCrossDissolve]) {
+            self.activityView.removeFromSuperview()
+        }
     }
     
 }
@@ -166,6 +183,11 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         
         cell.configureCell(with: viewModel.nowPlayingList[indexPath.row])
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let id = viewModel.nowPlayingList[indexPath.row].id else {return}
+        viewModel.routeToDetail(movieId: id)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -194,6 +216,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let id = viewModel.upcomingList[indexPath.row].id else {return}
+        viewModel.routeToDetail(movieId: id)
+    }
+
+}
+
+extension MainViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView == self.scrollView {

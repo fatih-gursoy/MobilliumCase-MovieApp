@@ -8,47 +8,30 @@
 import Foundation
 
 struct Movie: Codable {
-    let adult: Bool?
-    let backdropPath: String?
-    let budget: Int?
-    let genres: [Genre]?
-    let genreIDs: [Int]?
-    let homepage: String?
-    let id: Int?
-    let imdbID, originalLanguage, originalTitle, overview: String?
-    let popularity: Double?
     let posterPath: String?
-    let releaseDate: String?
-    let runtime: Int?
-    let status, tagline, title: String?
+    let adult: Bool?
+    let overview, releaseDate: String?
+    let genreIDS: [Int]?
+    let id: Int?
+    let originalTitle: String?
+    let title, backdropPath: String?
+    let popularity: Double?
+    let voteCount: Int?
     let video: Bool?
     let voteAverage: Double?
-    let voteCount: Int?
     
     enum CodingKeys: String, CodingKey {
-        case adult
-        case backdropPath = "backdrop_path"
-        case budget, genres, homepage, id
-        case genreIDs = "genre_ids"
-        case imdbID = "imdb_id"
-        case originalLanguage = "original_language"
-        case originalTitle = "original_title"
-        case overview, popularity
         case posterPath = "poster_path"
+        case adult, overview
         case releaseDate = "release_date"
-        case runtime
-        case status, tagline, title, video
-        case voteAverage = "vote_average"
+        case genreIDS = "genre_ids"
+        case id
+        case originalTitle = "original_title"
+        case title
+        case backdropPath = "backdrop_path"
+        case popularity
         case voteCount = "vote_count"
+        case video
+        case voteAverage = "vote_average"
     }
-}
-
-// MARK: - Genre
-struct Genre: Codable {
-    let id: Int?
-    let name: String?
-}
-
-struct GenreList: Codable {
-    let genres: [Genre]?
 }
