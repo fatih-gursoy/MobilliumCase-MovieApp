@@ -28,25 +28,38 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
         view.addSubview(scrollView)
         setConstraints()
         
-        configureCollectionView()
-        configureTableView()
-        
         viewModel.view = self
-        viewModel.viewDidLoad()
+        viewModel.fetchNowPlaying()
+        viewModel.fetchUpcoming()
+        refreshControl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.bounds = CGRect(x: 0, y: -50, width: refreshControl.frame.width, height: refreshControl.frame.height)
+        scrollView.refreshControl = refreshControl
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
+    @objc func pullRefresh() {
+        viewModel.fetchNowPlaying()
+        viewModel.fetchUpcoming()
+        refreshControl.endRefreshing()
+    }
+    
 //MARK: - UI Components
+    
+    private var refreshControl = UIRefreshControl()
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.delegate = self
         scrollView.addSubview(contentView)
         return scrollView
     }()
@@ -65,6 +78,8 @@ class MainViewController: UIViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(NowPlayingCell.self, forCellWithReuseIdentifier: NowPlayingCell.identifier)
+        collectionView.delegate = self
+        collectionView.dataSource = self
         return collectionView
     }()
     
@@ -79,11 +94,13 @@ class MainViewController: UIViewController {
     }()
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = DynamicTableView()
         tableView.register(UpcomingCell.self, forCellReuseIdentifier: UpcomingCell.identifier)
         tableView.isScrollEnabled = false
         tableView.showsVerticalScrollIndicator = false
         tableView.rowHeight = 136
+        tableView.delegate = self
+        tableView.dataSource = self
         return tableView
     }()
     
@@ -101,11 +118,8 @@ class MainViewController: UIViewController {
         }
         
         contentView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalTo(scrollView)
-            
-            make.width.equalTo(scrollView.snp.width)
-            make.height.equalTo(2500)
-            
+            make.top.bottom.leading.trailing.equalToSuperview()
+            make.width.equalToSuperview()
         }
         
         collectionView.snp.makeConstraints { make in
@@ -120,22 +134,9 @@ class MainViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(collectionView.snp.bottom)
         }
-    }
-    
-    func configureCollectionView() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
-    }
-    
-    func configureTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-//        tableView.layoutIfNeeded()
-//        let tableHeight = tableView.contentSize.height
-//        tableView.heightAnchor.constraint(equalToConstant: tableHeight).isActive = true
     }
     
 }
@@ -144,7 +145,6 @@ extension MainViewController: MainViewProtocol {
     
     func configureUI() {
         self.navigationController?.isNavigationBarHidden = true
-        
         collectionView.reloadData()
         tableView.reloadData()
         pageControl.numberOfPages = 5
@@ -194,4 +194,16 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        if scrollView == self.scrollView {
+            let contentHeight = scrollView.contentSize.height
+            let scrollOffset = scrollView.contentOffset.y
+            let height = scrollView.frame.size.height
+
+            if (scrollOffset > contentHeight - height - 100) {
+                viewModel.fetchUpcoming()
+            }
+        }
+    }
 }
