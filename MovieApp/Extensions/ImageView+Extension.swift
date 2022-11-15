@@ -10,10 +10,9 @@ import Kingfisher
 
 extension UIImageView {
     
-    func setImage(url: String, completion: @escaping ((Result<UIImage, Error>) -> Void)) {
+    func setImage(path: String, completion: @escaping ((Result<UIImage, Error>) -> Void)) {
         
-        let imageBaseURL = "http://image.tmdb.org/t/p/w500"
-        guard let url = URL(string: imageBaseURL + url) else {return}
+        guard let url = URL(string: Strings.imageBaseURL + path) else {return}
         
         self.kf.setImage(with: url) { result in
             

@@ -21,6 +21,7 @@
 		3D836B572922DD73000F8209 /* ImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836B562922DD73000F8209 /* ImageView+Extension.swift */; };
 		3D836B5B2922EA56000F8209 /* NowPlayingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836B5A2922EA56000F8209 /* NowPlayingCell.swift */; };
 		3D836B5D2922F5BB000F8209 /* UpcomingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836B5C2922F5BB000F8209 /* UpcomingCell.swift */; };
+		3D836B8A2923E4AE000F8209 /* SF-Pro-Display.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3D836B892923E4AE000F8209 /* SF-Pro-Display.otf */; };
 		C350BF975EAE9C05EDD844AC /* Pods_MovieApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C08F09BBE5026FD9C1D562BB /* Pods_MovieApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		3D836B562922DD73000F8209 /* ImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageView+Extension.swift"; sourceTree = "<group>"; };
 		3D836B5A2922EA56000F8209 /* NowPlayingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingCell.swift; sourceTree = "<group>"; };
 		3D836B5C2922F5BB000F8209 /* UpcomingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingCell.swift; sourceTree = "<group>"; };
+		3D836B892923E4AE000F8209 /* SF-Pro-Display.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display.otf"; sourceTree = "<group>"; };
 		49BA48756DA081992214782A /* Pods-MovieApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieApp.debug.xcconfig"; path = "Target Support Files/Pods-MovieApp/Pods-MovieApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9B88D7A8136FDD2F5480768E /* Pods-MovieApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieApp.release.xcconfig"; path = "Target Support Files/Pods-MovieApp/Pods-MovieApp.release.xcconfig"; sourceTree = "<group>"; };
 		C08F09BBE5026FD9C1D562BB /* Pods_MovieApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +84,7 @@
 				3D836B3F2922888B000F8209 /* App */,
 				3D836B462922CA79000F8209 /* Core */,
 				3D836B40292288A3000F8209 /* Scenes */,
-				3D836B582922EA24000F8209 /* UI Components */,
+				3D836B582922EA24000F8209 /* ReusableViews */,
 				3D836B4B2922CAED000F8209 /* Constants */,
 				3D836B4529228996000F8209 /* Resources */,
 				3D836B552922DD63000F8209 /* Extensions */,
@@ -128,6 +130,7 @@
 		3D836B4529228996000F8209 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3D836B822923DE3F000F8209 /* Fonts */,
 				3D836B3929228781000F8209 /* Info.plist */,
 				3D836B3429228781000F8209 /* Assets.xcassets */,
 			);
@@ -177,21 +180,21 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		3D836B582922EA24000F8209 /* UI Components */ = {
-			isa = PBXGroup;
-			children = (
-				3D836B592922EA2F000F8209 /* Cells */,
-			);
-			path = "UI Components";
-			sourceTree = "<group>";
-		};
-		3D836B592922EA2F000F8209 /* Cells */ = {
+		3D836B582922EA24000F8209 /* ReusableViews */ = {
 			isa = PBXGroup;
 			children = (
 				3D836B5A2922EA56000F8209 /* NowPlayingCell.swift */,
 				3D836B5C2922F5BB000F8209 /* UpcomingCell.swift */,
 			);
-			path = Cells;
+			path = ReusableViews;
+			sourceTree = "<group>";
+		};
+		3D836B822923DE3F000F8209 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				3D836B892923E4AE000F8209 /* SF-Pro-Display.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		5D26414DD78DC4178D356F51 /* Frameworks */ = {
@@ -273,6 +276,7 @@
 			files = (
 				3D836B3829228781000F8209 /* LaunchScreen.storyboard in Resources */,
 				3D836B3529228781000F8209 /* Assets.xcassets in Resources */,
+				3D836B8A2923E4AE000F8209 /* SF-Pro-Display.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +485,7 @@
 				INFOPLIST_FILE = MovieApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -512,6 +517,7 @@
 				INFOPLIST_FILE = MovieApp/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (

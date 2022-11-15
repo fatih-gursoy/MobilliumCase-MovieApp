@@ -39,6 +39,10 @@ class MainViewController: UIViewController {
         viewModel.viewDidLoad()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
 //MARK: - UI Components
     
     private lazy var scrollView: UIScrollView = {
@@ -52,7 +56,6 @@ class MainViewController: UIViewController {
         contentView.addSubview(collectionView)
         contentView.addSubview(pageControl)
         contentView.addSubview(tableView)
-        contentView.backgroundColor = .yellow
         return contentView
     }()
     
@@ -62,7 +65,6 @@ class MainViewController: UIViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(NowPlayingCell.self, forCellWithReuseIdentifier: NowPlayingCell.identifier)
-        collectionView.backgroundColor = .brown
         return collectionView
     }()
     
@@ -79,8 +81,8 @@ class MainViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UpcomingCell.self, forCellReuseIdentifier: UpcomingCell.identifier)
-        tableView.backgroundColor = .blue
         tableView.isScrollEnabled = false
+        tableView.showsVerticalScrollIndicator = false
         tableView.rowHeight = 136
         return tableView
     }()
@@ -99,19 +101,27 @@ class MainViewController: UIViewController {
         }
         
         contentView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            make.width.equalTo(scrollView)
+            make.top.leading.trailing.bottom.equalTo(scrollView)
+            
+            make.width.equalTo(scrollView.snp.width)
             make.height.equalTo(2500)
+            
         }
         
         collectionView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(256)
-            make.bottom.equalTo(pageControl.snp.bottom)
+        }
+        
+        pageControl.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(collectionView.snp.bottom)
+            make.height.equalTo(40)
         }
         
         tableView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
-            make.top.equalTo(collectionView)
+            make.top.equalTo(collectionView.snp.bottom)
         }
     }
     
@@ -123,9 +133,9 @@ class MainViewController: UIViewController {
     func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.layoutIfNeeded()
-        let tableHeight = tableView.contentSize.height
-        tableView.heightAnchor.constraint(equalToConstant: tableHeight).isActive = true
+//        tableView.layoutIfNeeded()
+//        let tableHeight = tableView.contentSize.height
+//        tableView.heightAnchor.constraint(equalToConstant: tableHeight).isActive = true
     }
     
 }
@@ -133,8 +143,11 @@ class MainViewController: UIViewController {
 extension MainViewController: MainViewProtocol {
     
     func configureUI() {
+        self.navigationController?.isNavigationBarHidden = true
+        
         collectionView.reloadData()
         tableView.reloadData()
+        pageControl.numberOfPages = 5
     }
     
 }
@@ -154,10 +167,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         cell.configureCell(with: viewModel.nowPlayingList[indexPath.row])
         return cell
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 0
-//    }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if scrollView == collectionView {
@@ -179,7 +188,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingCell.identifier) as? UpcomingCell
         else { fatalError("TableView Cell error") }
-        
+        cell.accessoryType = .disclosureIndicator
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         cell.configure(with: viewModel.upcomingList[indexPath.row])
         return cell
     }

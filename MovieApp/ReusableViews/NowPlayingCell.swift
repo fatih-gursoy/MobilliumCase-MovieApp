@@ -21,23 +21,21 @@ class NowPlayingCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var movieView: UIView = {
-        let movieView = UIView()
-        movieView.addSubview(movieImageView)
-        movieView.addSubview(stackView)
-        return movieView
+    private lazy var overlayView: UIView = {
+        let overlayView = UIView()
+        overlayView.backgroundColor = .black
+        overlayView.layer.opacity = 0.40
+        return overlayView
     }()
     
     private lazy var movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.masksToBounds = true
-        imageView.backgroundColor = .gray
         return imageView
     }()
     
     private lazy var stackView: UIStackView = {
-       let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         stackView.axis = .vertical
         stackView.spacing = 8
         return stackView
@@ -45,48 +43,62 @@ class NowPlayingCell: UICollectionViewCell {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "title"
+        label.font = UIFont(name: "SF Pro Display", size: 20)
+        label.textColor = .white
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "description"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.numberOfLines = 0
+        label.textColor = .white
         return label
     }()
     
     private func configureUI() {
-        contentView.addSubview(movieView)
+        contentView.addSubview(movieImageView)
+        contentView.addSubview(overlayView)
+        contentView.addSubview(stackView)
         setConstraints()
     }
 
     func setConstraints() {
-      
-        movieView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview()
-        }
         
         movieImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.bottom.equalTo(stackView.snp.bottom)
+        }
+        
+        overlayView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         
         stackView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(16)
+            make.leading.trailing.equalTo(contentView).inset(16)
+            make.bottom.equalTo(contentView).inset(40)
         }
         
-        movieImageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        titleLabel.snp.makeConstraints { make in
+            make.height.equalTo(24)
         }
+        
+        descriptionLabel.snp.makeConstraints { make in
+            make.height.equalTo(32)
+        }
+
     }
     
     func configureCell(with movie: Movie) {
         
-        guard let posterPath = movie.posterPath,
-              let placeholder = UIImage(named: "person.fill") else {return}
+        titleLabel.text = movie.title
+        descriptionLabel.text = movie.overview
+        
+        guard let backdropPath = movie.backdropPath,
+              let placeholder = UIImage(systemName:"person.fill") else {return}
         
         movieImageView.kf.indicatorType = .activity
-        movieImageView.setImage(url: posterPath) { result in
+        
+        movieImageView.setImage(path: backdropPath) { result in
             switch result {
             case .success(let image):
                 return self.movieImageView.image = image
