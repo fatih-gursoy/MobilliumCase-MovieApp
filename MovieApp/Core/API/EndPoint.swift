@@ -17,7 +17,7 @@ protocol EndPoint {
     var params: [String: String] {get}
 }
 
-enum API: EndPoint {
+enum APIRequest: EndPoint {
     
     case nowPlaying(page: Int)
     case upcoming(page: Int)
