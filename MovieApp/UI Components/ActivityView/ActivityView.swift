@@ -8,45 +8,22 @@
 import UIKit
 import SnapKit
 
-class ActivityView: UIView {
+class ActivityView: UIActivityIndicatorView {
             
-    var activityView: UIActivityIndicatorView = {
-        let activityView = UIActivityIndicatorView(style: .large)
-        activityView.hidesWhenStopped = true
-        return activityView
-    }()
-    
-    var overlayView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .systemGray6
-        return view
-    }()
-    
     override init(frame: CGRect) {
-        super.init(frame: UIScreen.main.bounds)
+        super.init(frame: frame)
         configure()
-        setConstraints()
     }
     
-    required init?(coder: NSCoder) {
+    required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func configure() {
-        self.addSubview(overlayView)
-        self.addSubview(activityView)
-        activityView.startAnimating()
+        self.style = .medium
+        self.hidesWhenStopped = true
+        self.backgroundColor = .systemGray6
+        self.startAnimating()
     }
     
-    func setConstraints() {
-        
-        overlayView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        activityView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
-    }
 }

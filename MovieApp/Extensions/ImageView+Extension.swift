@@ -14,6 +14,16 @@ extension UIImageView {
         self.kf.indicatorType = .activity
         guard let path else {return}
         guard let url = URL(string: Strings.imageBaseURL + path) else {return}
-        self.kf.setImage(with: url, placeholder: placeholder)
+        
+        self.kf.setImage(with: url, placeholder: placeholder) { result in
+            switch result {
+            case .success(let image):
+                let image = image.image
+                self.image = image
+            case .failure(let error):
+                self.image = placeholder
+                print(error.localizedDescription)
+            }
+        }
     }
 }

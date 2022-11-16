@@ -15,18 +15,18 @@ protocol MainViewModelProtocol: AnyObject {
     var isPageLoading: Bool {get set}
     var isLastPage: Bool {get set}
     
-    func fetchNowPlaying() 
-    func fetchUpcoming()
+    func fetchData(list: ListType)
     func routeToDetail(movieId: Int)
 }
 
 class MainViewModel: MainViewModelProtocol {
-    
+
     private let service: NetworkManagerProtocol
     
     weak var view: MainViewProtocol?
     var router: MainViewRouterProtocol?
     
+    var listType: ListType?
     var nowPlayingList: [Movie] = []
     var upcomingList: [Movie] = []
     var currentPage = 1
@@ -39,33 +39,50 @@ class MainViewModel: MainViewModelProtocol {
     
 // MARK: - Functions
     
-    func fetchNowPlaying() {
+    func fetchData(list: ListType) {
+        if currentPage == 1 { self.view?.showLoading() }
+        switch list {
+        case .nowPlaying:
+            fetchNowPlaying()
+        case .upcoming:
+            fetchUpcoming()
+        }
+    }
+    
+    private func fetchNowPlaying() {
         let request = APIRequest.nowPlaying(page: 1)
+        
         service.fetch(endPoint: request) { [weak self] (result: Result<ResponseModel, Error>) in
             guard let self = self else {return}
-
             switch result {
             case .success(let value):
                 guard let data = value.results else {return}
                 self.nowPlayingList.append(contentsOf: data.prefix(upTo: 5))
-                DispatchQueue.main.async { self.view?.configureUI() }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.view?.reloadCollectionView()
+                    self.view?.endLoading()
+                }
             case .failure(let error):
                 self.view?.showOnError(errorMessage: error.localizedDescription)
             }
         }
     }
 
-    func fetchUpcoming() {
+    private func fetchUpcoming() {
         guard !isLastPage && !isPageLoading else {return}
         isPageLoading = true
         let request = APIRequest.upcoming(page: currentPage)
+        
         service.fetch(endPoint: request) { [weak self] (result: Result<ResponseModel, Error>) in
             guard let self = self else {return}
             switch result {
             case .success(let value):
                 guard let data = value.results else {return}
                 self.upcomingList.append(contentsOf: data)
-                DispatchQueue.main.async { self.view?.configureUI() }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.view?.reloadTableView()
+                    self.view?.endLoading()
+                }
                 self.isPageLoading = false
                 guard let totalPages = value.total_pages else {return}
                 self.currentPage < totalPages ? (self.currentPage += 1) : (self.isLastPage = true)
@@ -78,4 +95,9 @@ class MainViewModel: MainViewModelProtocol {
     func routeToDetail(movieId: Int) {
         router?.routeToDetail(movieId: movieId)
     }
+}
+
+enum ListType {
+    case nowPlaying
+    case upcoming
 }

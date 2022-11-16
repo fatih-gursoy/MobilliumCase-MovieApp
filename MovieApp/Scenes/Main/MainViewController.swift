@@ -9,14 +9,16 @@ import UIKit
 import SnapKit
 
 protocol MainViewProtocol: AnyObject {
-    func configureUI()
+    func reloadCollectionView()
+    func reloadTableView()
     func showOnError(errorMessage: String)
+    func showLoading()
+    func endLoading()
 }
 
 class MainViewController: UIViewController {
-
+    
     var viewModel: MainViewModelProtocol
-    var activityView = ActivityView()
     
     init(viewModel: MainViewModelProtocol) {
         self.viewModel = viewModel
@@ -27,47 +29,7 @@ class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        view.addSubview(activityView)
-        view.addSubview(scrollView)
-
-        setConstraints()        
-        prepareRefreshControl()
-
-        viewModel.view = self
-        viewModel.fetchNowPlaying()
-        viewModel.fetchUpcoming()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        configureNavBar()
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
-    func configureNavBar() {
-        self.navigationController?.isNavigationBarHidden = true
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-    }
-    
-    func prepareRefreshControl() {
-        refreshControl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.bounds = CGRect(x: 0, y: -50, width: refreshControl.frame.width, height: refreshControl.frame.height)
-        scrollView.refreshControl = refreshControl
-    }
-    
-    @objc func pullRefresh() {
-        viewModel.fetchNowPlaying()
-        viewModel.fetchUpcoming()
-        refreshControl.endRefreshing()
-    }
-    
-//MARK: - UI Components
+    //MARK: - UI Components
     
     private var refreshControl = UIRefreshControl()
     
@@ -128,6 +90,61 @@ class MainViewController: UIViewController {
         return pageControl
     }()
     
+    private lazy var activityView: UIView = {
+        let activityView = ActivityView(frame: CGRect(x: 0, y: 0,
+                                                      width: view.frame.size.width,
+                                                      height: view.frame.size.height))
+        return activityView
+    }()
+    
+    private lazy var tableFooterView: UIView = {
+        let activityView = ActivityView(frame: CGRect(x: 0, y: 0,
+                                                      width: view.frame.size.width,
+                                                      height: 75))
+        activityView.backgroundColor = .white
+        return activityView
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        view.addSubview(scrollView)
+        setConstraints()
+        prepareRefreshControl()
+        viewModel.view = self
+        viewModel.fetchData(list: .nowPlaying)
+        viewModel.fetchData(list: .upcoming)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        configureNavBar()
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+//MARK: - ConfigureUI
+    
+    func configureNavBar() {
+        self.navigationController?.isNavigationBarHidden = true
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+    }
+    
+    func prepareRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(pullRefresh), for: .valueChanged)
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.bounds = CGRect(x: 0, y: -50, width: refreshControl.frame.width, height: refreshControl.frame.height)
+        scrollView.refreshControl = refreshControl
+    }
+    
+    @objc func pullRefresh() {
+        if viewModel.upcomingList.isEmpty {
+            viewModel.fetchData(list: .upcoming)
+        }
+        refreshControl.endRefreshing()
+    }
+    
     func setConstraints() {
         
         scrollView.snp.makeConstraints { make in
@@ -159,22 +176,35 @@ class MainViewController: UIViewController {
     
 }
 
+//MARK: - MainView Protocol
+
 extension MainViewController: MainViewProtocol {
     
-    func configureUI() {
+    func reloadCollectionView() {
         collectionView.reloadData()
-        tableView.reloadData()
         pageControl.numberOfPages = viewModel.nowPlayingList.count
-        activityView.removeFromSuperview()
+    }
+    
+    func reloadTableView() {
+        tableView.reloadData()
+        tableView.tableFooterView = nil
     }
     
     func showOnError(errorMessage: String) {
         presentAlert(title: "Lütfen Tekrar Deneyiniz", message: errorMessage, completion: nil)
     }
     
+    func showLoading() {
+        view.addSubview(activityView)
+    }
+    
+    func endLoading() {
+        self.activityView.removeFromSuperview()
+    }
+    
 }
 
-//MARK: - CollectionView
+//MARK: - CollectionView Delegate
 
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -204,7 +234,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     
 }
 
-//MARK: - TableView
+//MARK: - TableView Delegate
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -226,19 +256,20 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         guard let id = viewModel.upcomingList[indexPath.row].id else {return}
         viewModel.routeToDetail(movieId: id)
     }
-
+    
 }
+//MARK: - ScrollView Delegate
 
 extension MainViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
         if scrollView == self.scrollView {
             let contentHeight = scrollView.contentSize.height
             let scrollOffset = scrollView.contentOffset.y
             let height = scrollView.frame.size.height
-
-            if (scrollOffset > contentHeight - height - 100) {
-                viewModel.fetchUpcoming()
+            
+            if (scrollOffset > contentHeight - height + 50) {
+                tableView.tableFooterView = tableFooterView
+                viewModel.fetchData(list: .upcoming)
             }
         }
     }

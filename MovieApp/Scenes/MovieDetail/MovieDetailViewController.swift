@@ -10,12 +10,13 @@ import UIKit
 protocol MovieDetailViewProtocol: AnyObject {
     func configureUI()
     func showOnError(errorMessage: String)
+    func showLoading()
+    func endLoading()
 }
 
 class MovieDetailViewController: UIViewController {
 
     var viewModel: MovieDetailViewModelProtocol
-    var activityView = ActivityView()
     
     init(viewModel: MovieDetailViewModelProtocol) {
         self.viewModel = viewModel
@@ -29,12 +30,11 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        viewModel.view = self
-        viewModel.fetchMovieDetail()
         self.title = "Movie Title"
         view.addSubview(scrollView)
-        view.addSubview(activityView)
         setConstraints()
+        viewModel.view = self
+        viewModel.fetchMovieDetail()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +66,7 @@ class MovieDetailViewController: UIViewController {
     private lazy var movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         imageView.addSubview(overlayView)
         return imageView
     }()
@@ -79,7 +80,7 @@ class MovieDetailViewController: UIViewController {
     
     private lazy var imdbButton: UIButton = {
         let button = UIButton(type: .custom) as UIButton
-//        button.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
+        button.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         button.setImage(.imdbLogo, for: .normal)
         button.addTarget(self, action: #selector(imdbButtonTapped), for: .touchUpInside)
         return button
@@ -108,7 +109,7 @@ class MovieDetailViewController: UIViewController {
     
     private lazy var dotLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.font = UIFont(name: "SF Pro Display", size: 20)
         label.textColor = .dotColor
         label.text = "•"
         return label
@@ -147,8 +148,18 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
     
+    private lazy var activityView: UIView = {
+        let activityView = ActivityView(frame: CGRect(x: 0, y: 0,
+                                                      width: view.frame.size.width,
+                                                      height: view.frame.size.height))
+        return activityView
+    }()
+    
     @objc func imdbButtonTapped() {
-        print("Tapped")
+        guard let imdbID = viewModel.movie?.imdbID,
+              let url = URL(string: "https://www.imdb.com/title/" + imdbID) else {return}
+        
+        UIApplication.shared.open(url)
     }
     
     func setConstraints() {
@@ -192,7 +203,6 @@ class MovieDetailViewController: UIViewController {
 
 }
 
-
 extension MovieDetailViewController: MovieDetailViewProtocol {
     
     func configureUI() {
@@ -214,10 +224,14 @@ extension MovieDetailViewController: MovieDetailViewProtocol {
         
         dateLabel.text = viewModel.movie?.releaseDate?.dateFormatter()
         movieImageView.setImage(path: movie.backdropPath, placeholder: .placeholder)
-        
-        UIView.transition(with: self.view, duration: 1.5, options: [.transitionCrossDissolve]) {
-            self.activityView.removeFromSuperview()
-        }
+    }
+    
+    func showLoading() {
+        view.addSubview(activityView)
+    }
+    
+    func endLoading() {
+        activityView.removeFromSuperview()
     }
     
     func showOnError(errorMessage: String) {

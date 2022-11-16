@@ -33,14 +33,17 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
     
     func fetchMovieDetail() {
         let request = APIRequest.detail(id: movieId)
-
+        view?.showLoading()
         service.fetch(endPoint: request) { [weak self] (result: Result<MovieDetail, Error>) in
             guard let self = self else {return}
 
             switch result {
             case .success(let movie):
                 self.movie = movie
-                DispatchQueue.main.async { self.view?.configureUI() }
+                self.view?.configureUI()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.view?.endLoading()
+                }
             case .failure(let error):
                 self.view?.showOnError(errorMessage: error.localizedDescription)
             }

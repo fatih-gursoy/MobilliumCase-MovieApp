@@ -31,6 +31,7 @@ class NowPlayingCell: UICollectionViewCell {
     private lazy var movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         return imageView
     }()
     
