@@ -94,14 +94,15 @@ class UpcomingCell: UITableViewCell {
             make.trailing.equalTo(contentView).inset(16)
             make.top.equalTo(stackView.snp.bottom).offset(16)
         }
-        
     }
-    
     
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         descriptionLabel.text = movie.overview
-        dateLabel.text = "10.10.2022"
+        
+        if let releaseDate = movie.releaseDate {
+            dateLabel.text = releaseDate.dateFormatter()
+        }
         
         guard let backdropPath = movie.backdropPath,
               let placeholder = UIImage(systemName: "person.fill") else {return}
@@ -117,5 +118,4 @@ class UpcomingCell: UITableViewCell {
             }
         }
     }
-    
 }

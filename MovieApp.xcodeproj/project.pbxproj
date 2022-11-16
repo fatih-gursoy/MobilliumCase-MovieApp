@@ -30,6 +30,10 @@
 		3D836BA729244022000F8209 /* MainViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BA629244022000F8209 /* MainViewRouter.swift */; };
 		3D836BAA292442ED000F8209 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BA9292442ED000F8209 /* AppRouter.swift */; };
 		3D836BAC29244E5A000F8209 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BAB29244E5A000F8209 /* ActivityView.swift */; };
+		3D836BB02924BE18000F8209 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BAF2924BE18000F8209 /* String+Extension.swift */; };
+		3D836BB42924D0E6000F8209 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB32924D0E6000F8209 /* Assets.swift */; };
+		3D836BB62924D217000F8209 /* Image+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB52924D217000F8209 /* Image+Extension.swift */; };
+		3D836BB82924D5F3000F8209 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB72924D5F3000F8209 /* UIColor+Extension.swift */; };
 		C350BF975EAE9C05EDD844AC /* Pods_MovieApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C08F09BBE5026FD9C1D562BB /* Pods_MovieApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +63,10 @@
 		3D836BA629244022000F8209 /* MainViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewRouter.swift; sourceTree = "<group>"; };
 		3D836BA9292442ED000F8209 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		3D836BAB29244E5A000F8209 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		3D836BAF2924BE18000F8209 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		3D836BB32924D0E6000F8209 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
+		3D836BB52924D217000F8209 /* Image+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extension.swift"; sourceTree = "<group>"; };
+		3D836BB72924D5F3000F8209 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		49BA48756DA081992214782A /* Pods-MovieApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieApp.debug.xcconfig"; path = "Target Support Files/Pods-MovieApp/Pods-MovieApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9B88D7A8136FDD2F5480768E /* Pods-MovieApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieApp.release.xcconfig"; path = "Target Support Files/Pods-MovieApp/Pods-MovieApp.release.xcconfig"; sourceTree = "<group>"; };
 		C08F09BBE5026FD9C1D562BB /* Pods_MovieApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +163,7 @@
 				3D836B822923DE3F000F8209 /* Fonts */,
 				3D836B3929228781000F8209 /* Info.plist */,
 				3D836B3429228781000F8209 /* Assets.xcassets */,
+				3D836BB32924D0E6000F8209 /* Assets.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -199,6 +208,9 @@
 			isa = PBXGroup;
 			children = (
 				3D836B562922DD73000F8209 /* ImageView+Extension.swift */,
+				3D836BB52924D217000F8209 /* Image+Extension.swift */,
+				3D836BB72924D5F3000F8209 /* UIColor+Extension.swift */,
+				3D836BAF2924BE18000F8209 /* String+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -386,8 +398,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D836B572922DD73000F8209 /* ImageView+Extension.swift in Sources */,
+				3D836BB02924BE18000F8209 /* String+Extension.swift in Sources */,
 				3D836B532922CF87000F8209 /* NetworkManager.swift in Sources */,
 				3D836BAA292442ED000F8209 /* AppRouter.swift in Sources */,
+				3D836BB62924D217000F8209 /* Image+Extension.swift in Sources */,
 				3D836B302922877F000F8209 /* MainViewController.swift in Sources */,
 				3D836B2C2922877F000F8209 /* AppDelegate.swift in Sources */,
 				3D836BA729244022000F8209 /* MainViewRouter.swift in Sources */,
@@ -396,7 +410,9 @@
 				3D836BA329243866000F8209 /* MovieDetailRouter.swift in Sources */,
 				3D836B4A2922CA9A000F8209 /* EndPoint.swift in Sources */,
 				3D836B4F2922CF46000F8209 /* ResponseModel.swift in Sources */,
+				3D836BB42924D0E6000F8209 /* Assets.swift in Sources */,
 				3D836B5D2922F5BB000F8209 /* UpcomingCell.swift in Sources */,
+				3D836BB82924D5F3000F8209 /* UIColor+Extension.swift in Sources */,
 				3D836B2E2922877F000F8209 /* SceneDelegate.swift in Sources */,
 				3D836BAC29244E5A000F8209 /* ActivityView.swift in Sources */,
 				3D836B512922CF5E000F8209 /* Movie.swift in Sources */,
