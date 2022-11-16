@@ -64,7 +64,7 @@ class NowPlayingCell: UICollectionViewCell {
         contentView.addSubview(stackView)
         setConstraints()
     }
-
+    
     func setConstraints() {
         
         movieImageView.snp.makeConstraints { make in
@@ -87,32 +87,23 @@ class NowPlayingCell: UICollectionViewCell {
         descriptionLabel.snp.makeConstraints { make in
             make.height.equalTo(32)
         }
-
+        
     }
     
     func configureCell(with movie: Movie) {
+        guard let title = movie.title,
+              let year = movie.releaseDate?.dateToYear() else {return}
         
-        titleLabel.text = movie.title
+        let movieTitle = "\(title) (\(year))"
+        titleLabel.text = movieTitle
         descriptionLabel.text = movie.overview
-        
-        guard let backdropPath = movie.backdropPath,
-              let placeholder = UIImage(systemName:"person.fill") else {return}
-        
-        movieImageView.kf.indicatorType = .activity
-        
-        movieImageView.setImage(path: backdropPath) { result in
-            switch result {
-            case .success(let image):
-                return self.movieImageView.image = image
-            case .failure(let error):
-                self.movieImageView.image = placeholder
-                print(error)
-            }
-        }
+        movieImageView.setImage(path: movie.backdropPath, placeholder: .placeholder)
     }
     
     override func prepareForReuse() {
         movieImageView.image = nil
+        titleLabel.text = nil
+        descriptionLabel.text = nil
     }
     
 }

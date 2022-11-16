@@ -13,7 +13,7 @@ protocol MovieDetailViewModelProtocol: AnyObject {
     var movieId: Int {get set}
     var movie: MovieDetail? {get set}
     
-    func viewDidLoad()
+    func fetchMovieDetail()
 }
 
 class MovieDetailViewModel: MovieDetailViewModelProtocol {
@@ -31,10 +31,6 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         self.movieId = id
     }
     
-    func viewDidLoad() {
-        fetchMovieDetail()
-    }
-    
     func fetchMovieDetail() {
         let request = APIRequest.detail(id: movieId)
 
@@ -46,7 +42,7 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
                 self.movie = movie
                 DispatchQueue.main.async { self.view?.configureUI() }
             case .failure(let error):
-                print(error.localizedDescription)
+                self.view?.showOnError(errorMessage: error.localizedDescription)
             }
         }
     }

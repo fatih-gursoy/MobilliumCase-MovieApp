@@ -10,19 +10,10 @@ import Kingfisher
 
 extension UIImageView {
     
-    func setImage(path: String, completion: @escaping ((Result<UIImage, Error>) -> Void)) {
-        
+    func setImage(path: String?, placeholder: UIImage) {
+        self.kf.indicatorType = .activity
+        guard let path else {return}
         guard let url = URL(string: Strings.imageBaseURL + path) else {return}
-        
-        self.kf.setImage(with: url) { result in
-            
-            switch result {
-            case .success(let image):
-                let image = image.image
-                completion(.success(image))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        self.kf.setImage(with: url, placeholder: placeholder)
     }
 }

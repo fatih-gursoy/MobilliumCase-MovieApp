@@ -18,5 +18,6 @@ enum Assets {
     enum Icons {
         public static let imdbLogo = UIImage(named: "imdbLogo")
         public static let rateIcon = UIImage(named: "rateIcon")
+        public static let placeholder = UIImage(named: "placeholder")
     }
 }

@@ -34,6 +34,7 @@
 		3D836BB42924D0E6000F8209 /* Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB32924D0E6000F8209 /* Assets.swift */; };
 		3D836BB62924D217000F8209 /* Image+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB52924D217000F8209 /* Image+Extension.swift */; };
 		3D836BB82924D5F3000F8209 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB72924D5F3000F8209 /* UIColor+Extension.swift */; };
+		3D836BBA2925056F000F8209 /* ViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D836BB92925056F000F8209 /* ViewController+Extension.swift */; };
 		C350BF975EAE9C05EDD844AC /* Pods_MovieApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C08F09BBE5026FD9C1D562BB /* Pods_MovieApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,7 @@
 		3D836BB32924D0E6000F8209 /* Assets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assets.swift; sourceTree = "<group>"; };
 		3D836BB52924D217000F8209 /* Image+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extension.swift"; sourceTree = "<group>"; };
 		3D836BB72924D5F3000F8209 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		3D836BB92925056F000F8209 /* ViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extension.swift"; sourceTree = "<group>"; };
 		49BA48756DA081992214782A /* Pods-MovieApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieApp.debug.xcconfig"; path = "Target Support Files/Pods-MovieApp/Pods-MovieApp.debug.xcconfig"; sourceTree = "<group>"; };
 		9B88D7A8136FDD2F5480768E /* Pods-MovieApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MovieApp.release.xcconfig"; path = "Target Support Files/Pods-MovieApp/Pods-MovieApp.release.xcconfig"; sourceTree = "<group>"; };
 		C08F09BBE5026FD9C1D562BB /* Pods_MovieApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,8 +109,8 @@
 			children = (
 				3D836B3F2922888B000F8209 /* App */,
 				3D836B462922CA79000F8209 /* Core */,
-				3D836B40292288A3000F8209 /* Scenes */,
 				3D836BA8292442DF000F8209 /* Router */,
+				3D836B40292288A3000F8209 /* Scenes */,
 				3D836B582922EA24000F8209 /* ReusableViews */,
 				3D836B9B2923FB78000F8209 /* UI Components */,
 				3D836B4B2922CAED000F8209 /* Constants */,
@@ -208,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				3D836B562922DD73000F8209 /* ImageView+Extension.swift */,
+				3D836BB92925056F000F8209 /* ViewController+Extension.swift */,
 				3D836BB52924D217000F8209 /* Image+Extension.swift */,
 				3D836BB72924D5F3000F8209 /* UIColor+Extension.swift */,
 				3D836BAF2924BE18000F8209 /* String+Extension.swift */,
@@ -415,6 +418,7 @@
 				3D836BB82924D5F3000F8209 /* UIColor+Extension.swift in Sources */,
 				3D836B2E2922877F000F8209 /* SceneDelegate.swift in Sources */,
 				3D836BAC29244E5A000F8209 /* ActivityView.swift in Sources */,
+				3D836BBA2925056F000F8209 /* ViewController+Extension.swift in Sources */,
 				3D836B512922CF5E000F8209 /* Movie.swift in Sources */,
 				3D836BA1292437E4000F8209 /* MovieDetailViewModel.swift in Sources */,
 				3D836B432922892D000F8209 /* MainViewModel.swift in Sources */,

@@ -9,6 +9,7 @@ import UIKit
 
 protocol MovieDetailViewProtocol: AnyObject {
     func configureUI()
+    func showOnError(errorMessage: String)
 }
 
 class MovieDetailViewController: UIViewController {
@@ -16,20 +17,6 @@ class MovieDetailViewController: UIViewController {
     var viewModel: MovieDetailViewModelProtocol
     var activityView = ActivityView()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        viewModel.view = self
-        viewModel.viewDidLoad()
-        
-        view.addSubview(scrollView)
-        setConstraints()
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.isNavigationBarHidden = false
-    }
     init(viewModel: MovieDetailViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -37,6 +24,21 @@ class MovieDetailViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        viewModel.view = self
+        viewModel.fetchMovieDetail()
+        self.title = "Movie Title"
+        view.addSubview(scrollView)
+        view.addSubview(activityView)
+        setConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = false
     }
     
     private lazy var scrollView: UIScrollView = {
@@ -48,9 +50,9 @@ class MovieDetailViewController: UIViewController {
     
     private lazy var contentView: UIView = {
         let contentView = UIView()
-        contentView.addSubview(activityView)
         contentView.addSubview(movieImageView)
-        contentView.addSubview(stackView)
+        contentView.addSubview(midStackView)
+        contentView.addSubview(bottomStackView)
         return contentView
     }()
     
@@ -68,7 +70,59 @@ class MovieDetailViewController: UIViewController {
         return imageView
     }()
     
-    private lazy var stackView: UIStackView = {
+    private lazy var midStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [imdbButton, ratingStackView, dotLabel, dateLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        return stackView
+    }()
+    
+    private lazy var imdbButton: UIButton = {
+        let button = UIButton(type: .custom) as UIButton
+//        button.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
+        button.setImage(.imdbLogo, for: .normal)
+        button.addTarget(self, action: #selector(imdbButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var ratingStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [starImageView, ratingLabel])
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        return stackView
+    }()
+    
+    private lazy var starImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .center
+        imageView.image = .rateIcon
+        return imageView
+    }()
+    
+    private lazy var ratingLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private lazy var dotLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = .dotColor
+        label.text = "•"
+        return label
+    }()
+    
+    private lazy var dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textAlignment = .left
+        label.textColor = .black
+        return label
+    }()
+    
+    private lazy var bottomStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [titleLabel, descriptionLabel])
         stackView.axis = .vertical
         stackView.spacing = 16
@@ -93,6 +147,10 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
     
+    @objc func imdbButtonTapped() {
+        print("Tapped")
+    }
+    
     func setConstraints() {
         
         scrollView.snp.makeConstraints { make in
@@ -106,16 +164,21 @@ class MovieDetailViewController: UIViewController {
         
         movieImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(256)
+            make.height.equalTo(256)    
         }
         
         overlayView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        stackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().offset(16)
+        midStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(16)
             make.top.equalTo(movieImageView.snp.bottom).offset(16)
+        }
+        
+        bottomStackView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview().inset(16)
+            make.top.equalTo(midStackView.snp.bottom).offset(16)
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -129,31 +192,36 @@ class MovieDetailViewController: UIViewController {
 
 }
 
+
 extension MovieDetailViewController: MovieDetailViewProtocol {
     
     func configureUI() {
-        self.navigationItem.title = viewModel.movie?.title        
-        titleLabel.text = viewModel.movie?.title
+        
+        guard let movie = viewModel.movie,
+              let title = movie.title,
+              let year = movie.releaseDate?.dateToYear() else {return}
+        
+        let movieTitle = "\(title) (\(year))"
+        navigationItem.title = movieTitle
+        titleLabel.text = movieTitle
         descriptionLabel.text = viewModel.movie?.overview
         
-        guard let backdropPath = viewModel.movie?.backdropPath,
-              let placeholder = UIImage(systemName:"person.fill") else {return}
-        
-        movieImageView.kf.indicatorType = .activity
-        
-        movieImageView.setImage(path: backdropPath) { result in
-            switch result {
-            case .success(let image):
-                return self.movieImageView.image = image
-            case .failure(let error):
-                self.movieImageView.image = placeholder
-                print(error)
-            }
+        if let rating = viewModel.movie?.voteAverage {
+            let roundedRating = String(format: "%.1f", rating)
+            let ratingString = "\(roundedRating)/10"
+            ratingLabel.attributedText = ratingString.customAttributedText(withString: ratingString, font: UIFont.systemFont(ofSize: 13))
         }
+        
+        dateLabel.text = viewModel.movie?.releaseDate?.dateFormatter()
+        movieImageView.setImage(path: movie.backdropPath, placeholder: .placeholder)
         
         UIView.transition(with: self.view, duration: 1.5, options: [.transitionCrossDissolve]) {
             self.activityView.removeFromSuperview()
         }
+    }
+    
+    func showOnError(errorMessage: String) {
+        presentAlert(title: "Lütfen Tekrar Deneyiniz", message: errorMessage, completion: nil)
     }
     
 }

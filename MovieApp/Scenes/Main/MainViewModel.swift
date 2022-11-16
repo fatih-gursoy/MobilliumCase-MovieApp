@@ -40,48 +40,37 @@ class MainViewModel: MainViewModelProtocol {
 // MARK: - Functions
     
     func fetchNowPlaying() {
-        
         let request = APIRequest.nowPlaying(page: 1)
-        
         service.fetch(endPoint: request) { [weak self] (result: Result<ResponseModel, Error>) in
             guard let self = self else {return}
 
             switch result {
             case .success(let value):
                 guard let data = value.results else {return}
-                self.nowPlayingList = data
+                self.nowPlayingList.append(contentsOf: data.prefix(upTo: 5))
                 DispatchQueue.main.async { self.view?.configureUI() }
             case .failure(let error):
-                print(error.localizedDescription)
+                self.view?.showOnError(errorMessage: error.localizedDescription)
             }
         }
     }
 
     func fetchUpcoming() {
-        
         guard !isLastPage && !isPageLoading else {return}
         isPageLoading = true
-        
         let request = APIRequest.upcoming(page: currentPage)
-        
         service.fetch(endPoint: request) { [weak self] (result: Result<ResponseModel, Error>) in
             guard let self = self else {return}
-            
             switch result {
             case .success(let value):
                 guard let data = value.results else {return}
                 self.upcomingList.append(contentsOf: data)
                 DispatchQueue.main.async { self.view?.configureUI() }
                 self.isPageLoading = false
-                
                 guard let totalPages = value.total_pages else {return}
-                
-                self.currentPage < totalPages
-                ? (self.currentPage += 1)
-                : (self.isLastPage = true)
-                
+                self.currentPage < totalPages ? (self.currentPage += 1) : (self.isLastPage = true)
             case .failure(let error):
-                print(error.localizedDescription)
+                self.view?.showOnError(errorMessage: error.localizedDescription)
             }
         }
     }

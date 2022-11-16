@@ -18,6 +18,15 @@ extension String {
         return dt.string(from: formalDate)
     }
     
+    func dateToYear() -> String? {
+        let dt = DateFormatter()
+        dt.dateFormat = "yyyy-MM-dd"
+        guard let formalDate = dt.date(from: self) else {return nil}
+        dt.dateFormat = "yyyy"
+        return dt.string(from: formalDate)
+    }
+    
+    
     func customAttributedText(withString string: String, font: UIFont) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.font: font,
                                                                                       NSAttributedString.Key.foregroundColor : UIColor.appDarkGray])

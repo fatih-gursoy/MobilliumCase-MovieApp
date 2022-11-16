@@ -10,6 +10,7 @@ import SnapKit
 
 protocol MainViewProtocol: AnyObject {
     func configureUI()
+    func showOnError(errorMessage: String)
 }
 
 class MainViewController: UIViewController {
@@ -29,7 +30,9 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        view.addSubview(activityView)
         view.addSubview(scrollView)
+
         setConstraints()        
         prepareRefreshControl()
 
@@ -80,7 +83,6 @@ class MainViewController: UIViewController {
     
     private lazy var contentView: UIView = {
         let contentView = UIView()
-        contentView.addSubview(activityView)
         contentView.addSubview(collectionView)
         contentView.addSubview(pageControl)
         contentView.addSubview(tableView)
@@ -114,6 +116,7 @@ class MainViewController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.showsVerticalScrollIndicator = false
         tableView.rowHeight = 136
+        tableView.isMultipleTouchEnabled = false
         tableView.delegate = self
         tableView.dataSource = self
         return tableView
@@ -161,11 +164,12 @@ extension MainViewController: MainViewProtocol {
     func configureUI() {
         collectionView.reloadData()
         tableView.reloadData()
-        pageControl.numberOfPages = 5
-        
-        UIView.transition(with: self.view, duration: 3, options: [.transitionCrossDissolve]) {
-            self.activityView.removeFromSuperview()
-        }
+        pageControl.numberOfPages = viewModel.nowPlayingList.count
+        activityView.removeFromSuperview()
+    }
+    
+    func showOnError(errorMessage: String) {
+        presentAlert(title: "Lütfen Tekrar Deneyiniz", message: errorMessage, completion: nil)
     }
     
 }
@@ -218,6 +222,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         guard let id = viewModel.upcomingList[indexPath.row].id else {return}
         viewModel.routeToDetail(movieId: id)
     }

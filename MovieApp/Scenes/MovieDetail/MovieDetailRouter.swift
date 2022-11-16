@@ -8,18 +8,21 @@
 import UIKit
 
 protocol MovieDetailRouterProtocol: AnyObject {
-    var viewController: UIViewController? {get set}
+    var viewController: UIViewController {get set}
 }
 
 class MovieDetailRouter: MovieDetailRouterProtocol {
     
-    var viewController: UIViewController?
+    unowned var viewController: UIViewController
+    
+    init(viewController: UIViewController) {
+        self.viewController = viewController
+    }
     
     static func createScreen(with movieId: Int) -> UIViewController {
         let viewModel = MovieDetailViewModel(id: movieId)
         let movieDetailVC = MovieDetailViewController(viewModel: viewModel)
-        movieDetailVC.viewModel.router = MovieDetailRouter()
-        movieDetailVC.viewModel.router?.viewController = movieDetailVC
+        movieDetailVC.viewModel.router = MovieDetailRouter(viewController: movieDetailVC)
         return movieDetailVC
     }
 }

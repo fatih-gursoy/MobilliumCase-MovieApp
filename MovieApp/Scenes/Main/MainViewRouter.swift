@@ -8,25 +8,28 @@
 import UIKit
 
 protocol MainViewRouterProtocol: AnyObject {
-    var viewController: UIViewController? {get set}
+    var viewController: UIViewController {get set}
     
     func routeToDetail(movieId: Int)
 }
 
 class MainViewRouter: MainViewRouterProtocol {
     
-    var viewController: UIViewController?
+    unowned var viewController: UIViewController
+    
+    init(viewController: UIViewController) {
+        self.viewController = viewController
+    }
     
     static func createScreen() -> UIViewController {
         let viewModel = MainViewModel()
         let mainViewController = MainViewController(viewModel: viewModel)
-        mainViewController.viewModel.router = MainViewRouter()
-        mainViewController.viewModel.router?.viewController = mainViewController
+        mainViewController.viewModel.router = MainViewRouter(viewController: mainViewController)
         return mainViewController
     }
     
     func routeToDetail(movieId: Int) {
         let movieDetailVC = MovieDetailRouter.createScreen(with: movieId)
-        viewController?.navigationController?.pushViewController(movieDetailVC, animated: true)
+        viewController.navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }

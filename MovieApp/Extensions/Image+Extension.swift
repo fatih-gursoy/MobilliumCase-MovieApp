@@ -18,4 +18,9 @@ public extension UIImage {
         guard let image = Assets.Icons.rateIcon else {return UIImage()}
         return image
     }
+    
+    static var placeholder: UIImage {
+        guard let image = Assets.Icons.placeholder else {return UIImage()}
+        return image
+    }
 }
