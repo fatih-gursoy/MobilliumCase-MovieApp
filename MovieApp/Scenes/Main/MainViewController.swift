@@ -29,7 +29,7 @@ class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //MARK: - UI Components
+//MARK: - UI Components
     
     private var refreshControl = UIRefreshControl()
     
@@ -124,7 +124,7 @@ class MainViewController: UIViewController {
         return .lightContent
     }
 
-//MARK: - ConfigureUI
+//MARK: - Functions
     
     func configureNavBar() {
         self.navigationController?.isNavigationBarHidden = true
@@ -144,7 +144,6 @@ class MainViewController: UIViewController {
     }
     
     func setConstraints() {
-        
         scrollView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalToSuperview()
@@ -171,10 +170,9 @@ class MainViewController: UIViewController {
             make.top.equalTo(collectionView.snp.bottom)
         }
     }
-    
 }
 
-//MARK: - MainView Protocol
+//MARK: - MainViewProtocol
 
 extension MainViewController: MainViewProtocol {
     
@@ -202,7 +200,7 @@ extension MainViewController: MainViewProtocol {
     
 }
 
-//MARK: - CollectionView Delegate
+//MARK: - CollectionViewDelegate
 
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -213,7 +211,6 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NowPlayingCell.identifier, for: indexPath) as? NowPlayingCell else { fatalError("Could not load") }
-        
         cell.configureCell(with: viewModel.nowPlayingList[indexPath.row])
         return cell
     }
@@ -229,10 +226,9 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             pageControl.currentPage = Int(collectionView.contentOffset.x / width)
         }
     }
-    
 }
 
-//MARK: - TableView Delegate
+//MARK: - TableViewDelegate
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -242,7 +238,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UpcomingCell.identifier) as? UpcomingCell
-        else { fatalError("TableView Cell error") }
+        else { fatalError("Could not load") }
         cell.accessoryType = .disclosureIndicator
         cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         cell.configure(with: viewModel.upcomingList[indexPath.row])
@@ -254,9 +250,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         guard let id = viewModel.upcomingList[indexPath.row].id else {return}
         viewModel.routeToDetail(movieId: id)
     }
-    
 }
-//MARK: - ScrollView Delegate
+//MARK: - ScrollViewDelegate
 
 extension MainViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

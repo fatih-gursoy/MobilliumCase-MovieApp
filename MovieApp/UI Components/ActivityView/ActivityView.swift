@@ -25,5 +25,4 @@ class ActivityView: UIActivityIndicatorView {
         self.backgroundColor = .systemBackground
         self.startAnimating()
     }
-    
 }

@@ -12,8 +12,6 @@ protocol MainViewModelProtocol: AnyObject {
     var router: MainViewRouterProtocol? {get set}
     var nowPlayingList: [Movie] {get set}
     var upcomingList: [Movie] {get set}
-    var isPageLoading: Bool {get set}
-    var isLastPage: Bool {get set}
     
     func fetchData(list: ListType)
     func routeToDetail(movieId: Int)
@@ -22,10 +20,8 @@ protocol MainViewModelProtocol: AnyObject {
 class MainViewModel: MainViewModelProtocol {
 
     private let service: NetworkManagerProtocol
-    
     weak var view: MainViewProtocol?
     var router: MainViewRouterProtocol?
-    
     var listType: ListType?
     var nowPlayingList: [Movie] = []
     var upcomingList: [Movie] = []
@@ -96,6 +92,8 @@ class MainViewModel: MainViewModelProtocol {
         router?.routeToDetail(movieId: movieId)
     }
 }
+
+// MARK: - ListType Enum
 
 enum ListType {
     case nowPlaying

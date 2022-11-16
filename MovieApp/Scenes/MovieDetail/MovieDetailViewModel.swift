@@ -19,10 +19,8 @@ protocol MovieDetailViewModelProtocol: AnyObject {
 class MovieDetailViewModel: MovieDetailViewModelProtocol {
     
     private let service: NetworkManagerProtocol
-    
     weak var view: MovieDetailViewProtocol?
     var router: MovieDetailRouterProtocol?
-
     var movieId: Int
     var movie: MovieDetail?
     
@@ -30,6 +28,8 @@ class MovieDetailViewModel: MovieDetailViewModelProtocol {
         self.service = service
         self.movieId = id
     }
+    
+//MARK: - Functions
     
     func fetchMovieDetail() {
         let request = APIRequest.detail(id: movieId)

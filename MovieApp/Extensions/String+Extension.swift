@@ -26,7 +26,6 @@ extension String {
         return dt.string(from: formalDate)
     }
     
-    
     func customAttributedText(withString string: String, font: UIFont) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.font: font,
                                                                                       NSAttributedString.Key.foregroundColor : UIColor.appDarkGray])

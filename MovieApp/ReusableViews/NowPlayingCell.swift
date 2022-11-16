@@ -67,7 +67,6 @@ class NowPlayingCell: UICollectionViewCell {
     }
     
     func setConstraints() {
-        
         movieImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -88,7 +87,6 @@ class NowPlayingCell: UICollectionViewCell {
         descriptionLabel.snp.makeConstraints { make in
             make.height.equalTo(32)
         }
-        
     }
     
     func configureCell(with movie: Movie) {
@@ -106,5 +104,4 @@ class NowPlayingCell: UICollectionViewCell {
         titleLabel.text = nil
         descriptionLabel.text = nil
     }
-    
 }

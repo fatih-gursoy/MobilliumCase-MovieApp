@@ -70,7 +70,6 @@ class UpcomingCell: UITableViewCell {
     }
 
     func setConstraints() {
-        
         movieImageView.snp.makeConstraints { make in
             make.height.width.equalTo(104)
             make.leading.top.bottom.equalTo(contentView).inset(16)
