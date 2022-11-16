@@ -29,8 +29,7 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        self.title = "Movie Title"
+        view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         setConstraints()
         viewModel.view = self
@@ -119,7 +118,6 @@ class MovieDetailViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13)
         label.textAlignment = .left
-        label.textColor = .black
         return label
     }()
     
@@ -135,7 +133,6 @@ class MovieDetailViewController: UIViewController {
         label.font = UIFont(name: "SF Pro Display", size: 20)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.textColor = .black
         return label
     }()
     
@@ -144,7 +141,6 @@ class MovieDetailViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 15)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        label.textColor = .black
         return label
     }()
     

@@ -22,7 +22,7 @@ class ActivityView: UIActivityIndicatorView {
     func configure() {
         self.style = .medium
         self.hidesWhenStopped = true
-        self.backgroundColor = .systemGray6
+        self.backgroundColor = .systemBackground
         self.startAnimating()
     }
     

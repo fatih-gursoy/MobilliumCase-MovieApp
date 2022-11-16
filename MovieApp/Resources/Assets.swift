@@ -12,6 +12,7 @@ enum Assets {
     
     enum Colors {
         public static let appDarkGray = UIColor(named: "appDarkGray")
+        public static let appBlack = UIColor(named: "appBlack")
         public static let dotColor = UIColor(named: "dotColor")
     }
  

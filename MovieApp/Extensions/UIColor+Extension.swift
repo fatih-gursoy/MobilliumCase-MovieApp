@@ -14,6 +14,11 @@ public extension UIColor {
         return color
     }
     
+    static var appBlack: UIColor {
+        guard let color = Assets.Colors.appBlack else {return UIColor()}
+        return color
+    }
+    
     static var dotColor: UIColor {
         guard let color = Assets.Colors.dotColor else {return UIColor()}
         return color

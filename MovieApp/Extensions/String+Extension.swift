@@ -31,7 +31,7 @@ extension String {
         let attributedString = NSMutableAttributedString(string: string, attributes: [NSAttributedString.Key.font: font,
                                                                                       NSAttributedString.Key.foregroundColor : UIColor.appDarkGray])
         
-        attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: NSRange(location:0, length: 3))
+        attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.appBlack, range: NSRange(location:0, length: 3))
         return attributedString
     }
 }

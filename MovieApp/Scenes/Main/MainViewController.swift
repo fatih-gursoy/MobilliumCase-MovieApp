@@ -101,13 +101,13 @@ class MainViewController: UIViewController {
         let activityView = ActivityView(frame: CGRect(x: 0, y: 0,
                                                       width: view.frame.size.width,
                                                       height: 75))
-        activityView.backgroundColor = .white
+        activityView.backgroundColor = .systemBackground
         return activityView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         setConstraints()
         prepareRefreshControl()
@@ -139,9 +139,7 @@ class MainViewController: UIViewController {
     }
     
     @objc func pullRefresh() {
-        if viewModel.upcomingList.isEmpty {
-            viewModel.fetchData(list: .upcoming)
-        }
+        viewModel.upcomingList.isEmpty ? viewModel.fetchData(list: .upcoming) : self.reloadTableView()
         refreshControl.endRefreshing()
     }
     
@@ -267,7 +265,7 @@ extension MainViewController {
             let scrollOffset = scrollView.contentOffset.y
             let height = scrollView.frame.size.height
             
-            if (scrollOffset > contentHeight - height + 50) {
+            if (scrollOffset > contentHeight - height + 10) {
                 tableView.tableFooterView = tableFooterView
                 viewModel.fetchData(list: .upcoming)
             }

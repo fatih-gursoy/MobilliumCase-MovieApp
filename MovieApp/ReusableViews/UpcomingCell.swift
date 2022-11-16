@@ -108,4 +108,10 @@ class UpcomingCell: UITableViewCell {
         dateLabel.text = movie.releaseDate?.dateFormatter()
         movieImageView.setImage(path: movie.backdropPath, placeholder: .placeholder)
     }
+    
+    override func prepareForReuse() {
+        movieImageView.image = nil
+        titleLabel.text = nil
+        descriptionLabel.text = nil
+    }
 }
